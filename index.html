@@ -7,442 +7,134 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Trening">
 <title>Trening Interwałowy</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #13131a;
-    --surface2: #1c1c28;
-    --border: #2a2a3d;
-    --accent: #e8ff47;
-    --accent2: #ff6b35;
-    --accent3: #4fc3f7;
-    --text: #f0f0f8;
-    --text-dim: #7a7a9a;
-    --warm: #ff9500;
-    --cool: #34c759;
-    --danger: #ff3b30;
-    --r: 16px;
-  }
+:root {
+  --bg:#0a0a0f; --surface:#13131a; --surface2:#1c1c28;
+  --border:#2a2a3d; --accent:#e8ff47; --accent2:#ff6b35;
+  --accent3:#4fc3f7; --text:#f0f0f8; --text-dim:#7a7a9a;
+  --warm:#ff9500; --danger:#ff3b30; --r:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  
-  html, body {
-    height: 100%; min-height: 100vh;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
+/* SETUP */
+#setup{overflow-y:auto;padding-bottom:40px;}
+.setup-header{
+  padding:56px 24px 20px;
+  background:linear-gradient(180deg,#13131a 0%,transparent 100%);
+  position:sticky;top:0;z-index:10;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.app-title{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:2px;color:var(--accent);line-height:1;}
+.app-subtitle{font-size:12px;color:var(--text-dim);margin-top:3px;}
+.hdr-row{display:flex;justify-content:space-between;align-items:flex-start;}
+.setup-body{padding:16px 24px;display:flex;flex-direction:column;gap:18px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--text-dim);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.card-title .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.field:last-child{margin-bottom:0;}
+label{font-size:11px;color:var(--text-dim);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;}
+.input-row{display:flex;gap:8px;align-items:center;}
+input[type=number]{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;
+  padding:11px 13px;width:100%;outline:none;-webkit-appearance:none;transition:border-color 0.2s;
+}
+input[type=number]:focus{border-color:var(--accent);}
+.unit{font-size:13px;color:var(--text-dim);white-space:nowrap;min-width:28px;}
+.intervals-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.interval-item{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;}
+.interval-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);min-width:26px;line-height:1;}
+.interval-fields{flex:1;display:flex;flex-direction:column;gap:6px;}
+.interval-name-input{background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:3px 0;outline:none;width:100%;}
+.interval-name-input::placeholder{color:var(--text-dim);}
+.interval-dur-row{display:flex;align-items:center;gap:6px;}
+.interval-dur-row input{width:70px;padding:6px 10px;font-size:14px;}
+.btn-remove{background:none;border:none;color:var(--danger);font-size:22px;cursor:pointer;padding:4px;line-height:1;}
+.btn-add{background:var(--surface2);border:1px dashed var(--border);border-radius:10px;color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px;width:100%;cursor:pointer;}
+.start-btn{margin:0 24px;background:var(--accent);color:#0a0a0f;border:none;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;padding:20px;width:calc(100% - 48px);cursor:pointer;}
+.start-btn:active{opacity:0.85;}
+.mute-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text-dim);font-size:17px;cursor:pointer;}
+.install-banner{background:var(--surface);border:1px solid var(--accent);border-radius:12px;padding:12px 16px;margin:0 24px 14px;font-size:13px;color:var(--text-dim);display:none;line-height:1.5;}
+.install-banner strong{color:var(--accent);}
+.install-banner.show{display:block;}
 
-  /* ── SCREENS ── */
-  .screen { display: none; min-height: 100vh; flex-direction: column; }
-  .screen.active { display: flex; }
+/* ACTIVE */
+#active{position:relative;overflow:hidden;}
+.active-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 25%,var(--pc,#1a2a1a) 0%,var(--bg) 65%);transition:background 0.7s ease;}
+.active-content{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh;padding:0 22px 28px;}
+.active-top{display:flex;justify-content:space-between;align-items:center;padding-top:52px;padding-bottom:10px;}
+.phase-badge{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2px;padding:5px 12px;border-radius:20px;border:1px solid currentColor;}
+.phase-badge.warmup{color:var(--warm);}
+.phase-badge.interval{color:var(--accent);}
+.phase-badge.cooldown{color:var(--accent3);}
+.stop-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text-dim);font-size:13px;padding:8px 14px;cursor:pointer;}
+.stop-btn:active{background:var(--danger);color:#fff;border-color:var(--danger);}
+.progress-track{height:3px;background:var(--border);border-radius:2px;margin-bottom:18px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s linear;}
+.phase-label{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:3px;color:var(--text-dim);margin-bottom:4px;}
+.phase-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,8vw,46px);line-height:1;color:var(--text);margin-bottom:3px;}
+.phase-detail{font-size:13px;color:var(--text-dim);margin-bottom:14px;}
+.timer-block{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+.timer-ring{position:relative;width:200px;height:200px;}
+.timer-ring svg{position:absolute;inset:0;transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:6;}
+.ring-fill{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;stroke-dasharray:565;stroke-dashoffset:0;transition:stroke 0.4s;}
+.timer-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.timer-value{font-family:'Bebas Neue',sans-serif;font-size:68px;line-height:1;color:var(--text);letter-spacing:-2px;}
+.timer-sub{font-size:11px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;}
+.series-dots{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
+.series-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all 0.3s;}
+.series-dot.done{background:var(--accent);opacity:0.5;}
+.series-dot.current{background:var(--accent);box-shadow:0 0 8px var(--accent);}
+.next-up{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px 15px;margin-top:14px;}
+.next-label{font-size:10px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;}
+.next-name{font-size:14px;font-weight:500;color:var(--text);}
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:10px;}
+.ctrl-btn{
+  padding:13px 4px;background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;color:var(--text);font-family:'Bebas Neue',sans-serif;
+  font-size:22px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;
+  transition:all 0.12s;
+}
+.ctrl-btn:active{transform:scale(0.93);background:var(--surface2);}
+.ctrl-btn .lbl{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--text-dim);letter-spacing:0.3px;}
+.ctrl-btn.pause-active{background:var(--accent);color:#000;border-color:var(--accent);}
+.ctrl-btn.pause-active .lbl{color:#000;}
 
-  /* ── SETUP SCREEN ── */
-  #setup {
-    padding: 0 0 40px;
-    overflow-y: auto;
-  }
-
-  .setup-header {
-    padding: 60px 24px 24px;
-    background: linear-gradient(180deg, #13131a 0%, transparent 100%);
-    position: sticky; top: 0; z-index: 10;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  .app-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px;
-    letter-spacing: 2px;
-    color: var(--accent);
-    line-height: 1;
-  }
-
-  .app-subtitle {
-    font-size: 13px;
-    color: var(--text-dim);
-    letter-spacing: 0.5px;
-    margin-top: 4px;
-  }
-
-  .setup-body { padding: 16px 24px; display: flex; flex-direction: column; gap: 20px; }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 20px;
-  }
-
-  .card-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card-title .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent);
-  }
-
-  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-  .field:last-child { margin-bottom: 0; }
-
-  label { font-size: 12px; color: var(--text-dim); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
-
-  .input-row { display: flex; gap: 8px; align-items: center; }
-
-  input[type=number] {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    padding: 12px 14px;
-    width: 100%;
-    outline: none;
-    -webkit-appearance: none;
-    transition: border-color 0.2s;
-  }
-  input[type=number]:focus { border-color: var(--accent); }
-  input[type=number]::placeholder { color: var(--text-dim); }
-
-  .unit { font-size: 13px; color: var(--text-dim); white-space: nowrap; min-width: 30px; }
-
-  /* Intervals list */
-  .intervals-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-
-  .interval-item {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .interval-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    color: var(--accent);
-    min-width: 28px;
-    line-height: 1;
-  }
-
-  .interval-fields { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-
-  .interval-name-input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    padding: 4px 0;
-    outline: none;
-    width: 100%;
-  }
-  .interval-name-input::placeholder { color: var(--text-dim); }
-
-  .interval-dur-row { display: flex; align-items: center; gap: 6px; }
-  .interval-dur-row input {
-    width: 70px;
-    padding: 6px 10px;
-    font-size: 14px;
-  }
-
-  .btn-remove {
-    background: none; border: none;
-    color: var(--danger); font-size: 20px; cursor: pointer;
-    padding: 4px; line-height: 1;
-  }
-
-  .btn-add {
-    background: var(--surface2);
-    border: 1px dashed var(--border);
-    border-radius: 10px;
-    color: var(--text-dim);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    padding: 10px;
-    width: 100%;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-add:active { background: var(--surface); color: var(--text); }
-
-  /* START BUTTON */
-  .start-btn {
-    margin: 0 24px;
-    background: var(--accent);
-    color: #0a0a0f;
-    border: none;
-    border-radius: var(--r);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 3px;
-    padding: 20px;
-    width: calc(100% - 48px);
-    cursor: pointer;
-    transition: transform 0.1s, opacity 0.2s;
-  }
-  .start-btn:active { transform: scale(0.97); }
-
-  /* ── ACTIVE SCREEN ── */
-  #active {
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .active-bg {
-    position: absolute; inset: 0; z-index: 0;
-    background: radial-gradient(ellipse at 50% 30%, var(--phase-color, #1a2a1a) 0%, var(--bg) 70%);
-    transition: background 0.6s ease;
-  }
-
-  .active-content {
-    position: relative; z-index: 1;
-    display: flex; flex-direction: column;
-    height: 100vh; padding: 20px 24px 40px;
-  }
-
-  .active-top {
-    display: flex; justify-content: space-between; align-items: center;
-    padding-top: 50px; margin-bottom: 10px;
-  }
-
-  .phase-badge {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 13px; letter-spacing: 2px;
-    padding: 5px 12px; border-radius: 20px;
-    border: 1px solid currentColor;
-  }
-
-  .phase-badge.warmup { color: var(--warm); }
-  .phase-badge.interval { color: var(--accent); }
-  .phase-badge.cooldown { color: var(--accent3); }
-
-  .stop-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text-dim);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    padding: 8px 16px;
-    cursor: pointer;
-  }
-  .stop-btn:active { background: var(--danger); color: white; border-color: var(--danger); }
-
-  /* Progress bar */
-  .progress-track {
-    height: 3px; background: var(--border); border-radius: 2px;
-    margin-bottom: 32px; overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%; background: var(--accent);
-    border-radius: 2px;
-    transition: width 1s linear;
-  }
-
-  /* Phase info */
-  .phase-label {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px; letter-spacing: 3px;
-    color: var(--text-dim); margin-bottom: 8px;
-  }
-
-  .phase-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 9vw, 52px);
-    line-height: 1; color: var(--text);
-    margin-bottom: 4px;
-  }
-
-  .phase-detail {
-    font-size: 14px; color: var(--text-dim);
-    margin-bottom: 32px;
-  }
-
-  /* Timer */
-  .timer-block {
-    flex: 1; display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    gap: 8px;
-  }
-
-  .timer-ring {
-    position: relative; width: 220px; height: 220px;
-  }
-
-  .timer-ring svg {
-    position: absolute; inset: 0;
-    transform: rotate(-90deg);
-  }
-
-  .timer-ring-bg { fill: none; stroke: var(--border); stroke-width: 6; }
-  .timer-ring-fill {
-    fill: none; stroke: var(--accent);
-    stroke-width: 6; stroke-linecap: round;
-    transition: stroke-dashoffset 1s linear, stroke 0.5s;
-  }
-
-  .timer-inner {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-  }
-
-  .timer-value {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 72px; line-height: 1;
-    color: var(--text); letter-spacing: -2px;
-  }
-
-  .timer-sub {
-    font-size: 12px; color: var(--text-dim);
-    letter-spacing: 1px; text-transform: uppercase;
-  }
-
-  /* Next up */
-  .next-up {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 14px 18px;
-    display: flex; gap: 12px; align-items: center;
-    margin-top: 24px;
-  }
-
-  .next-label { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
-  .next-name { font-size: 15px; font-weight: 500; color: var(--text); }
-
-  /* Series indicators */
-  .series-dots {
-    display: flex; gap: 6px; justify-content: center;
-    margin-top: 16px; flex-wrap: wrap;
-  }
-
-  .series-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--border); transition: background 0.3s;
-  }
-  .series-dot.done { background: var(--accent); }
-  .series-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-
-  /* Controls */
-  .controls {
-    display: flex; gap: 12px; margin-top: 20px;
-  }
-
-  .ctrl-btn {
-    flex: 1; padding: 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    color: var(--text);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px; letter-spacing: 1px;
-    cursor: pointer; transition: all 0.15s;
-  }
-  .ctrl-btn:active { transform: scale(0.96); background: var(--surface2); }
-  .ctrl-btn.pause-active { background: var(--accent); color: #000; border-color: var(--accent); }
-
-  /* DONE SCREEN */
-  #done {
-    justify-content: center; align-items: center;
-    padding: 40px 24px; text-align: center; gap: 24px;
-  }
-
-  .done-icon { font-size: 64px; }
-  .done-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 56px; letter-spacing: 3px;
-    color: var(--accent); line-height: 1;
-  }
-  .done-sub { font-size: 16px; color: var(--text-dim); }
-
-  .done-stats {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 20px; width: 100%;
-    display: flex; flex-direction: column; gap: 12px;
-  }
-
-  .stat-row { display: flex; justify-content: space-between; align-items: center; }
-  .stat-label { font-size: 13px; color: var(--text-dim); }
-  .stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--text); }
-
-  .again-btn {
-    background: var(--accent);
-    color: #0a0a0f;
-    border: none;
-    border-radius: var(--r);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px; letter-spacing: 2px;
-    padding: 18px 40px;
-    cursor: pointer; width: 100%;
-  }
-
-  /* Install banner */
-  .install-banner {
-    background: var(--surface);
-    border: 1px solid var(--accent);
-    border-radius: 12px;
-    padding: 14px 18px;
-    margin: 0 24px 16px;
-    font-size: 13px;
-    color: var(--text-dim);
-    display: none;
-    line-height: 1.5;
-  }
-  .install-banner strong { color: var(--accent); }
-  .install-banner.show { display: block; }
-
-  /* Mute toggle */
-  .mute-btn {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; padding: 6px 12px;
-    color: var(--text-dim); font-size: 18px;
-    cursor: pointer;
-  }
+/* DONE */
+#done{justify-content:center;align-items:center;padding:40px 24px;text-align:center;gap:20px;}
+.done-icon{font-size:60px;}
+.done-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:3px;color:var(--accent);line-height:1;}
+.done-sub{font-size:15px;color:var(--text-dim);}
+.done-stats{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;width:100%;display:flex;flex-direction:column;gap:10px;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;}
+.stat-label{font-size:13px;color:var(--text-dim);}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--text);}
+.again-btn{background:var(--accent);color:#0a0a0f;border:none;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;padding:18px;cursor:pointer;width:100%;}
 </style>
 </head>
 <body>
 
-<!-- ── SETUP SCREEN ── -->
+<!-- SETUP -->
 <div id="setup" class="screen active">
   <div class="setup-header">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+    <div class="hdr-row">
       <div>
         <div class="app-title">INTERVAL<br>TRAINER</div>
         <div class="app-subtitle">Trening interwałowy</div>
       </div>
-      <button class="mute-btn" id="muteBtn" title="Wycisz">🔔</button>
+      <button class="mute-btn" id="muteBtn">🔔</button>
     </div>
   </div>
-
   <div id="installBanner" class="install-banner">
-    📱 <strong>Zainstaluj na iPhone:</strong> Kliknij <strong>Udostępnij ⬆️</strong> → <strong>Dodaj do ekranu głównego</strong>
+    📱 <strong>Zainstaluj:</strong> Safari → <strong>Udostępnij ⬆️</strong> → <strong>Dodaj do ekranu głównego</strong>
   </div>
-
   <div class="setup-body">
-
-    <!-- Warmup -->
     <div class="card">
       <div class="card-title"><span class="dot" style="background:var(--warm)"></span>ROZGRZEWKA</div>
       <div class="field">
@@ -453,88 +145,72 @@
         </div>
       </div>
     </div>
-
-    <!-- Workout -->
     <div class="card">
       <div class="card-title"><span class="dot"></span>TRENING</div>
       <div class="field">
         <label>Liczba serii</label>
         <div class="input-row">
-          <input type="number" id="seriesCount" value="5" min="1" max="30">
+          <input type="number" id="seriesCount" value="5" min="1" max="99">
           <span class="unit">serie</span>
         </div>
       </div>
-
-      <div class="card-title" style="margin-top:16px;"><span class="dot" style="background:var(--accent2)"></span>INTERWAŁY W SERII</div>
+      <div class="card-title" style="margin-top:14px;"><span class="dot" style="background:var(--accent2)"></span>INTERWAŁY W SERII</div>
       <div class="intervals-list" id="intervalsList"></div>
       <button class="btn-add" id="addIntervalBtn">+ Dodaj interwał</button>
     </div>
-
-    <!-- Cooldown -->
     <div class="card">
-      <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>ZAKOŃCZENIE / ROZCIĄGANIE</div>
+      <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>ZAKOŃCZENIE</div>
       <div class="field">
-        <label>Czas zakończenia</label>
+        <label>Czas rozciągania</label>
         <div class="input-row">
           <input type="number" id="cooldownMin" value="10" min="0" max="60">
           <span class="unit">min</span>
         </div>
       </div>
     </div>
-
   </div>
-
   <button class="start-btn" id="startBtn">ROZPOCZNIJ TRENING</button>
 </div>
 
-<!-- ── ACTIVE SCREEN ── -->
+<!-- ACTIVE -->
 <div id="active" class="screen">
   <div class="active-bg" id="activeBg"></div>
   <div class="active-content">
     <div class="active-top">
-      <div class="phase-badge" id="phaseBadge">ROZGRZEWKA</div>
+      <div class="phase-badge interval" id="phaseBadge">TRENING</div>
       <button class="stop-btn" id="stopBtn">✕ Zakończ</button>
     </div>
-
-    <div class="progress-track">
-      <div class="progress-fill" id="totalProgress" style="width:0%"></div>
-    </div>
-
+    <div class="progress-track"><div class="progress-fill" id="totalProgress" style="width:0%"></div></div>
     <div class="phase-label" id="phaseLabel">FAZA</div>
-    <div class="phase-name" id="phaseName">Rozgrzewka</div>
+    <div class="phase-name" id="phaseName">—</div>
     <div class="phase-detail" id="phaseDetail"></div>
-
     <div class="timer-block">
-      <div class="timer-ring" id="timerRing">
-        <svg viewBox="0 0 220 220" width="220" height="220">
-          <circle class="timer-ring-bg" cx="110" cy="110" r="100"/>
-          <circle class="timer-ring-fill" id="timerCircle" cx="110" cy="110" r="100"
-            stroke-dasharray="628" stroke-dashoffset="0"/>
+      <div class="timer-ring">
+        <svg viewBox="0 0 200 200" width="200" height="200">
+          <circle class="ring-bg" cx="100" cy="100" r="90"/>
+          <circle class="ring-fill" id="ringFill" cx="100" cy="100" r="90"/>
         </svg>
         <div class="timer-inner">
           <div class="timer-value" id="timerValue">00:00</div>
-          <div class="timer-sub" id="timerSub">pozostało</div>
+          <div class="timer-sub">pozostało</div>
         </div>
       </div>
-
       <div class="series-dots" id="seriesDots"></div>
     </div>
-
-    <div class="next-up" id="nextUp">
-      <div>
-        <div class="next-label">Następnie</div>
-        <div class="next-name" id="nextName">—</div>
-      </div>
+    <div class="next-up">
+      <div class="next-label">Następnie</div>
+      <div class="next-name" id="nextName">—</div>
     </div>
-
     <div class="controls">
-      <button class="ctrl-btn" id="pauseBtn">⏸ PAUZA</button>
-      <button class="ctrl-btn" id="skipBtn">POMIŃ ⏭</button>
+      <button class="ctrl-btn" id="prevBtn">⏮<span class="lbl">Wstecz</span></button>
+      <button class="ctrl-btn" id="pauseBtn">⏸<span class="lbl">Pauza</span></button>
+      <button class="ctrl-btn" id="restartBtn">🔄<span class="lbl">Powtórz</span></button>
+      <button class="ctrl-btn" id="nextBtn">⏭<span class="lbl">Dalej</span></button>
     </div>
   </div>
 </div>
 
-<!-- ── DONE SCREEN ── -->
+<!-- DONE -->
 <div id="done" class="screen">
   <div class="done-icon">🏁</div>
   <div class="done-title">BRAWO!</div>
@@ -544,56 +220,80 @@
 </div>
 
 <script>
-// ── STATE ──
+// ══════════════════════════════════════
+// AUDIO ENGINE
+// iOS Safari requires AudioContext to be
+// created AND a buffer played inside a
+// direct user-gesture handler (onclick).
+// We store the context once created and
+// resume it on every interaction.
+// ══════════════════════════════════════
+let AC = null;   // AudioContext
 let muted = false;
-let audioCtx = null;
+
+function initAudio() {
+  // Must be called inside a user gesture (click/touch)
+  if (AC) return;
+  try {
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+    // Play silent buffer — essential iOS unlock trick
+    const buf = AC.createBuffer(1, 1, AC.sampleRate);
+    const src = AC.createBufferSource();
+    src.buffer = buf;
+    src.connect(AC.destination);
+    src.start(0);
+  } catch(e) { console.warn('AudioContext init failed', e); }
+}
+
+function resumeAudio() {
+  if (AC && AC.state === 'suspended') AC.resume();
+}
+
+function tone(freq, startSec, durSec, vol) {
+  if (!AC) return;
+  resumeAudio();
+  try {
+    const osc  = AC.createOscillator();
+    const gain = AC.createGain();
+    osc.connect(gain);
+    gain.connect(AC.destination);
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const t = AC.currentTime + startSec;
+    gain.gain.setValueAtTime(0.001, t);
+    gain.gain.linearRampToValueAtTime(vol || 0.35, t + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + durSec);
+    osc.start(t);
+    osc.stop(t + durSec + 0.06);
+  } catch(e) {}
+}
+
+// Each sound: array of [freq, delaySeconds, durationSeconds, volume?]
+const SFX = {
+  start:    [[523,0,.18,.35],[659,.2,.18,.35],[784,.41,.18,.35],[1047,.63,.45,.4]],
+  warmup:   [[440,0,.3],[550,.36,.32]],
+  series:   [[550,0,.1,.4],[770,.14,.1,.4],[550,.28,.1,.4],[880,.42,.32,.45]],
+  interval: [[660,0,.2],[990,.26,.22]],
+  cooldown: [[660,0,.25],[440,.3,.4]],
+  end:      [[523,0,.2,.35],[659,.22,.2,.35],[784,.44,.2,.35],[1047,.66,.5,.45]],
+  tick:     [[1400,0,.06,.28]],
+  back:     [[880,0,.14],[660,.17,.2]],
+};
+
+function beep(name) {
+  if (muted || !AC) return;
+  (SFX[name] || SFX.tick).forEach(([f,d,dur,v]) => tone(f,d,dur,v));
+}
+
+// ══════════════════════════════════════
+// INTERVALS CONFIG
+// ══════════════════════════════════════
 let intervals = [
-  { name: 'Wolne tempo', duration: 3 },
-  { name: 'Szybkie tempo', duration: 1 },
-  { name: 'Sprint', duration: 1 }
+  {name:'Wolne tempo', duration:3},
+  {name:'Szybkie tempo', duration:1},
+  {name:'Sprint', duration:1},
 ];
 
-// ── AUDIO ──
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-
-function beep(type) {
-  if (muted) return;
-  try {
-    const ctx = getAudioCtx();
-    if (ctx.state === 'suspended') ctx.resume();
-    
-    const configs = {
-      start:    [{ f: 880, t: 0.0, d: 0.15 }, { f: 880, t: 0.18, d: 0.15 }, { f: 1320, t: 0.36, d: 0.3 }],
-      interval: [{ f: 660, t: 0.0, d: 0.2 }, { f: 990, t: 0.25, d: 0.2 }],
-      series:   [{ f: 550, t: 0.0, d: 0.1 }, { f: 770, t: 0.13, d: 0.1 }, { f: 550, t: 0.26, d: 0.1 }, { f: 880, t: 0.39, d: 0.25 }],
-      warmup:   [{ f: 440, t: 0.0, d: 0.3 }, { f: 550, t: 0.35, d: 0.3 }],
-      cooldown: [{ f: 660, t: 0.0, d: 0.25 }, { f: 440, t: 0.3, d: 0.4 }],
-      end:      [{ f: 523, t: 0.0, d: 0.2 }, { f: 659, t: 0.22, d: 0.2 }, { f: 784, t: 0.44, d: 0.2 }, { f: 1047, t: 0.66, d: 0.5 }],
-      tick:     [{ f: 1200, t: 0.0, d: 0.05 }]
-    };
-
-    const tones = configs[type] || configs.tick;
-    const now = ctx.currentTime;
-
-    tones.forEach(({ f, t, d }) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.value = f;
-      gain.gain.setValueAtTime(0, now + t);
-      gain.gain.linearRampToValueAtTime(0.4, now + t + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + t + d);
-      osc.start(now + t);
-      osc.stop(now + t + d + 0.05);
-    });
-  } catch(e) { console.warn('Audio error:', e); }
-}
-
-// ── INTERVALS UI ──
 function renderIntervals() {
   const list = document.getElementById('intervalsList');
   list.innerHTML = '';
@@ -601,14 +301,13 @@ function renderIntervals() {
     const el = document.createElement('div');
     el.className = 'interval-item';
     el.innerHTML = `
-      <div class="interval-num">${i + 1}</div>
+      <div class="interval-num">${i+1}</div>
       <div class="interval-fields">
         <input class="interval-name-input" placeholder="Nazwa interwału" value="${iv.name}"
-          oninput="intervals[${i}].name = this.value">
+          oninput="intervals[${i}].name=this.value">
         <div class="interval-dur-row">
-          <input type="number" value="${iv.duration}" min="0.5" max="60" step="0.5"
-            style="width:70px;padding:6px 10px;font-size:14px;"
-            oninput="intervals[${i}].duration = parseFloat(this.value) || 1">
+          <input type="number" value="${iv.duration}" min="0.5" max="99" step="0.5"
+            oninput="intervals[${i}].duration=parseFloat(this.value)||1">
           <span class="unit">min</span>
         </div>
       </div>
@@ -618,342 +317,285 @@ function renderIntervals() {
   });
 }
 
-function removeInterval(i) {
-  intervals.splice(i, 1);
-  renderIntervals();
-}
+function removeInterval(i) { intervals.splice(i,1); renderIntervals(); }
 
-document.getElementById('addIntervalBtn').addEventListener('click', () => {
-  intervals.push({ name: 'Interwał ' + (intervals.length + 1), duration: 1 });
+document.getElementById('addIntervalBtn').onclick = () => {
+  intervals.push({name:'Interwał '+(intervals.length+1), duration:1});
   renderIntervals();
-});
+};
 
-// ── BUILD WORKOUT PLAN ──
+// ══════════════════════════════════════
+// BUILD PLAN
+// ══════════════════════════════════════
 function buildPlan() {
-  const warmupMin = parseFloat(document.getElementById('warmupMin').value) || 0;
-  const seriesCount = parseInt(document.getElementById('seriesCount').value) || 1;
+  const warmupMin   = parseFloat(document.getElementById('warmupMin').value)   || 0;
+  const seriesCount = parseInt(document.getElementById('seriesCount').value)   || 1;
   const cooldownMin = parseFloat(document.getElementById('cooldownMin').value) || 0;
 
   const plan = [];
-  let totalSec = 0;
-
-  if (warmupMin > 0) {
-    plan.push({ type: 'warmup', name: 'Rozgrzewka', duration: warmupMin * 60, seriesIdx: null, intervalIdx: null });
-    totalSec += warmupMin * 60;
-  }
+  if (warmupMin > 0)
+    plan.push({type:'warmup', name:'Rozgrzewka', duration:Math.round(warmupMin*60)});
 
   for (let s = 0; s < seriesCount; s++) {
     intervals.forEach((iv, ivIdx) => {
-      const d = Math.round((iv.duration || 1) * 60);
       plan.push({
-        type: 'interval',
-        name: iv.name,
-        duration: d,
-        seriesIdx: s,
-        seriesTotal: seriesCount,
-        intervalIdx: ivIdx,
-        intervalTotal: intervals.length
+        type:'interval', name:iv.name,
+        duration:Math.round((iv.duration||1)*60),
+        seriesIdx:s, seriesTotal:seriesCount,
+        intervalIdx:ivIdx, intervalTotal:intervals.length,
       });
-      totalSec += d;
     });
   }
 
-  if (cooldownMin > 0) {
-    plan.push({ type: 'cooldown', name: 'Rozciąganie', duration: cooldownMin * 60, seriesIdx: null, intervalIdx: null });
-    totalSec += cooldownMin * 60;
-  }
+  if (cooldownMin > 0)
+    plan.push({type:'cooldown', name:'Rozciąganie', duration:Math.round(cooldownMin*60)});
 
-  return { plan, totalSec };
+  return plan;
 }
 
-// ── TIMER ENGINE ──
-let workout = null;
-let timer = null;
-let startTime = 0;
-let pauseStart = 0;
-let totalPaused = 0;
-let isPaused = false;
-let stepIdx = 0;
-let stepElapsed = 0;
-let lastSecond = -1;
+// ══════════════════════════════════════
+// TIMER — wall-clock based (RAF)
+// stepDeadline = perf.now() when step ends
+// On navigate: just recalculate deadline.
+// ══════════════════════════════════════
+let plan        = [];
+let stepIdx     = 0;
+let stepDeadline= 0;
+let pauseStart  = 0;
+let paused      = false;
+let rafId       = null;
+let lastCeil    = -1;
 
-function formatTime(sec) {
+function fmt(sec) {
   sec = Math.max(0, Math.ceil(sec));
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
 }
+
+function totalSec() { return plan.reduce((a,s)=>a+s.duration,0); }
 
 function startWorkout() {
-  const { plan, totalSec } = buildPlan();
-  if (plan.length === 0) return;
+  plan = buildPlan();
+  if (!plan.length) return;
+  stepIdx      = 0;
+  paused       = false;
+  lastCeil     = -1;
+  stepDeadline = performance.now() + plan[0].duration * 1000;
 
-  // Unlock audio on user interaction
-  getAudioCtx();
-
-  workout = { plan, totalSec };
-  stepIdx = 0;
-  stepElapsed = 0;
-  totalPaused = 0;
-  isPaused = false;
-  startTime = performance.now();
-  lastSecond = -1;
-
-  showScreen('active');
   buildSeriesDots();
+  showScreen('active');
   renderStep();
   beep('start');
-
-  timer = setInterval(tick, 100);
+  if (rafId) cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(tick);
 }
 
-function tick() {
-  if (isPaused) return;
+function tick(now) {
+  if (!plan.length) return;
+  if (paused) { rafId = requestAnimationFrame(tick); return; }
 
-  const now = performance.now();
-  const elapsed = (now - startTime - totalPaused) / 1000;
-  const step = workout.plan[stepIdx];
+  const step   = plan[stepIdx];
   if (!step) return;
 
-  const stepRemaining = step.duration - stepElapsed - (elapsed - getTotalElapsedBeforeStep());
-  const globalElapsed = getTotalElapsedBeforeStep() + (elapsed - getTotalElapsedBeforeStep()) + stepElapsed;
+  const remMs  = stepDeadline - now;
+  const remSec = remMs / 1000;
+  const c      = Math.ceil(remSec);
 
-  // Compute per-step elapsed
-  const stepStart = getTotalElapsedBeforeStep();
-  const stepProgress = elapsed - stepStart;
-  const rem = step.duration - stepProgress;
-
-  // Countdown ticks at 3,2,1
-  const remCeiled = Math.ceil(rem);
-  if (remCeiled !== lastSecond) {
-    lastSecond = remCeiled;
-    if (remCeiled <= 3 && remCeiled > 0) beep('tick');
-    updateTimerDisplay(rem, step.duration, elapsed);
+  if (c !== lastCeil) {
+    lastCeil = c;
+    if (c > 0 && c <= 3) beep('tick');
   }
 
-  // Advance step?
-  if (rem <= 0) {
+  updateDisplay(remSec, step.duration);
+  updateProgress(step, remSec);
+
+  if (remMs <= 0) {
     stepIdx++;
-    if (stepIdx >= workout.plan.length) {
-      endWorkout();
-      return;
-    }
+    if (stepIdx >= plan.length) { endWorkout(); return; }
+    stepDeadline = now + plan[stepIdx].duration * 1000;
+    lastCeil = -1;
     renderStep();
-    lastSecond = -1;
-    const nextBeep = workout.plan[stepIdx].type;
-    if (nextBeep === 'warmup') beep('warmup');
-    else if (nextBeep === 'cooldown') beep('cooldown');
-    else if (workout.plan[stepIdx].intervalIdx === 0) beep('series');
-    else beep('interval');
+    playStepBeep(stepIdx);
   }
 
-  // Global progress
-  const totalElapsed = getCurrentTotalElapsed(elapsed);
-  const pct = Math.min(100, (totalElapsed / workout.totalSec) * 100);
-  document.getElementById('totalProgress').style.width = pct + '%';
+  rafId = requestAnimationFrame(tick);
 }
 
-function getTotalElapsedBeforeStep() {
-  let t = 0;
-  for (let i = 0; i < stepIdx; i++) t += workout.plan[i].duration;
-  return t;
+function playStepBeep(i) {
+  const s = plan[i];
+  if      (s.type==='warmup')                beep('warmup');
+  else if (s.type==='cooldown')              beep('cooldown');
+  else if (s.intervalIdx===0)                beep('series');
+  else                                       beep('interval');
 }
 
-function getCurrentTotalElapsed(elapsed) {
-  return getTotalElapsedBeforeStep() + Math.max(0, elapsed - getTotalElapsedBeforeStep());
+function updateDisplay(remSec, durSec) {
+  document.getElementById('timerValue').textContent = fmt(remSec);
+  const circ   = 2 * Math.PI * 90; // r=90, dasharray=565
+  const frac   = durSec > 0 ? Math.max(0, remSec/durSec) : 0;
+  document.getElementById('ringFill').style.strokeDashoffset = circ * (1 - frac);
 }
 
-// Simpler approach — track per-step start time
-let stepStartWall = 0;
+function updateProgress(step, remSec) {
+  let elapsed = 0;
+  for (let i=0; i<stepIdx; i++) elapsed += plan[i].duration;
+  elapsed += Math.max(0, step.duration - remSec);
+  const ts = totalSec();
+  document.getElementById('totalProgress').style.width =
+    (ts > 0 ? Math.min(100,(elapsed/ts)*100) : 0) + '%';
+}
 
-function renderStep() {
-  stepStartWall = performance.now();
-  const step = workout.plan[stepIdx];
-  if (!step) return;
+// ── Navigation ──
+function goPrev() {
+  if (!plan.length) return;
+  const step    = plan[stepIdx];
+  const elapsed = step.duration - (stepDeadline - performance.now())/1000;
+  if (elapsed > 3 && stepIdx > 0) {
+    // more than 3s in — restart current
+    goRestart(); return;
+  }
+  if (stepIdx > 0) stepIdx--;
+  stepDeadline = performance.now() + plan[stepIdx].duration * 1000;
+  lastCeil = -1;
+  renderStep();
+  beep('back');
+}
 
-  // Phase badge
-  const badge = document.getElementById('phaseBadge');
-  badge.className = 'phase-badge ' + step.type;
-  badge.textContent = step.type === 'warmup' ? 'ROZGRZEWKA' : step.type === 'cooldown' ? 'ZAKOŃCZENIE' : 'TRENING';
+function goRestart() {
+  if (!plan.length) return;
+  stepDeadline = performance.now() + plan[stepIdx].duration * 1000;
+  lastCeil = -1;
+  renderStep();
+  beep('interval');
+}
 
-  // Phase name
-  document.getElementById('phaseLabel').textContent =
-    step.type === 'interval' ? `SERIA ${step.seriesIdx + 1} / ${step.seriesTotal}` :
-    step.type === 'warmup' ? 'ROZGRZEWKA' : 'ZAKOŃCZENIE';
-  document.getElementById('phaseName').textContent = step.name;
-  document.getElementById('phaseDetail').textContent =
-    step.type === 'interval' ? `Interwał ${step.intervalIdx + 1} z ${step.intervalTotal}` : '';
+function goNext() {
+  if (!plan.length) return;
+  stepIdx++;
+  if (stepIdx >= plan.length) { endWorkout(); return; }
+  stepDeadline = performance.now() + plan[stepIdx].duration * 1000;
+  lastCeil = -1;
+  renderStep();
+  playStepBeep(stepIdx);
+}
 
-  // Colors
-  const bg = document.getElementById('activeBg');
-  const circle = document.getElementById('timerCircle');
-  if (step.type === 'warmup') {
-    bg.style.setProperty('--phase-color', '#2a1a0a');
-    circle.style.stroke = 'var(--warm)';
-  } else if (step.type === 'cooldown') {
-    bg.style.setProperty('--phase-color', '#0a1a2a');
-    circle.style.stroke = 'var(--accent3)';
+function togglePause() {
+  paused = !paused;
+  const btn = document.getElementById('pauseBtn');
+  if (paused) {
+    pauseStart = performance.now();
+    btn.innerHTML = '▶<span class="lbl">Wznów</span>';
+    btn.classList.add('pause-active');
   } else {
-    bg.style.setProperty('--phase-color', '#1a1a0a');
-    circle.style.stroke = 'var(--accent)';
+    stepDeadline += (performance.now() - pauseStart);
+    btn.innerHTML = '⏸<span class="lbl">Pauza</span>';
+    btn.classList.remove('pause-active');
   }
-
-  // Next up
-  const nextStep = workout.plan[stepIdx + 1];
-  document.getElementById('nextName').textContent = nextStep ? nextStep.name : 'Koniec treningu!';
-
-  // Series dots
-  updateSeriesDots();
-
-  // Init timer display
-  updateTimerDisplayDirect(step.duration, step.duration);
 }
 
-function updateTimerDisplay(rem, total, globalElapsed) {
-  const now = performance.now();
-  const stepElapsedNow = (now - stepStartWall - totalPaused) / 1000;
-  // Recalculate per step
-  const step = workout.plan[stepIdx];
+function endWorkout() {
+  if (rafId) { cancelAnimationFrame(rafId); rafId=null; }
+  const seriesCount   = parseInt(document.getElementById('seriesCount').value)||1;
+  const ts            = totalSec();
+  document.getElementById('doneStats').innerHTML = `
+    <div class="stat-row"><span class="stat-label">Łączny czas</span><span class="stat-val">${fmt(ts)}</span></div>
+    <div class="stat-row"><span class="stat-label">Serie</span><span class="stat-val">${seriesCount}</span></div>
+    <div class="stat-row"><span class="stat-label">Interwały</span><span class="stat-val">${seriesCount*intervals.length}</span></div>
+  `;
+  plan = [];
+  showScreen('done');
+  beep('end');
+}
+
+// ── Render step UI ──
+function renderStep() {
+  const step = plan[stepIdx];
   if (!step) return;
-  const r = step.duration - stepElapsedNow;
-  updateTimerDisplayDirect(r, step.duration);
 
-  // Update global progress
-  let totalBefore = 0;
-  for (let i = 0; i < stepIdx; i++) totalBefore += workout.plan[i].duration;
-  const totalNow = totalBefore + stepElapsedNow;
-  const pct = Math.min(100, (totalNow / workout.totalSec) * 100);
-  document.getElementById('totalProgress').style.width = pct + '%';
-}
+  const badge = document.getElementById('phaseBadge');
+  badge.className = 'phase-badge '+step.type;
+  badge.textContent = step.type==='warmup'?'ROZGRZEWKA':step.type==='cooldown'?'ZAKOŃCZENIE':'TRENING';
 
-function updateTimerDisplayDirect(rem, total) {
-  rem = Math.max(0, rem);
-  document.getElementById('timerValue').textContent = formatTime(rem);
-  const circ = 2 * Math.PI * 100;
-  const pct = total > 0 ? rem / total : 0;
-  document.getElementById('timerCircle').style.strokeDashoffset = circ * (1 - pct);
+  document.getElementById('phaseLabel').textContent =
+    step.type==='interval'  ? `SERIA ${step.seriesIdx+1} / ${step.seriesTotal}` :
+    step.type==='warmup'    ? 'ROZGRZEWKA' : 'ZAKOŃCZENIE';
+  document.getElementById('phaseName').textContent  = step.name;
+  document.getElementById('phaseDetail').textContent =
+    step.type==='interval' ? `Interwał ${step.intervalIdx+1} z ${step.intervalTotal}` : '';
+
+  const bg   = document.getElementById('activeBg');
+  const ring = document.getElementById('ringFill');
+  if      (step.type==='warmup')   { bg.style.setProperty('--pc','#2a1a0a'); ring.style.stroke='var(--warm)';    }
+  else if (step.type==='cooldown') { bg.style.setProperty('--pc','#0a1a2a'); ring.style.stroke='var(--accent3)'; }
+  else                             { bg.style.setProperty('--pc','#1c1a08'); ring.style.stroke='var(--accent)';  }
+
+  const next = plan[stepIdx+1];
+  document.getElementById('nextName').textContent = next ? next.name : 'Koniec treningu! 🏁';
+
+  updateSeriesDots();
+  updateDisplay(step.duration, step.duration);
 }
 
 function buildSeriesDots() {
-  const container = document.getElementById('seriesDots');
-  container.innerHTML = '';
-  const count = parseInt(document.getElementById('seriesCount').value) || 1;
-  for (let i = 0; i < count; i++) {
+  const c = document.getElementById('seriesDots');
+  c.innerHTML = '';
+  const n = parseInt(document.getElementById('seriesCount').value)||1;
+  for (let i=0;i<n;i++) {
     const d = document.createElement('div');
-    d.className = 'series-dot';
-    d.id = 'dot-' + i;
-    container.appendChild(d);
+    d.className='series-dot'; d.id='dot-'+i;
+    c.appendChild(d);
   }
 }
 
 function updateSeriesDots() {
-  const step = workout.plan[stepIdx];
-  const count = parseInt(document.getElementById('seriesCount').value) || 1;
-  for (let i = 0; i < count; i++) {
-    const d = document.getElementById('dot-' + i);
+  const step = plan[stepIdx];
+  const n    = parseInt(document.getElementById('seriesCount').value)||1;
+  for (let i=0;i<n;i++) {
+    const d = document.getElementById('dot-'+i);
     if (!d) continue;
-    if (step && step.type === 'interval') {
-      if (i < step.seriesIdx) d.className = 'series-dot done';
-      else if (i === step.seriesIdx) d.className = 'series-dot active';
-      else d.className = 'series-dot';
+    if (step?.type==='interval') {
+      d.className = i < step.seriesIdx ? 'series-dot done' : i===step.seriesIdx ? 'series-dot current' : 'series-dot';
     } else {
       d.className = 'series-dot';
     }
   }
 }
 
-function pauseWorkout() {
-  isPaused = !isPaused;
-  const btn = document.getElementById('pauseBtn');
-  if (isPaused) {
-    pauseStart = performance.now();
-    btn.textContent = '▶ WZNÓW';
-    btn.classList.add('pause-active');
-  } else {
-    totalPaused += performance.now() - pauseStart;
-    btn.textContent = '⏸ PAUZA';
-    btn.classList.remove('pause-active');
-    // Reset step start to account for pause
-    stepStartWall += (performance.now() - pauseStart);
-  }
-}
-
-function skipStep() {
-  stepIdx++;
-  if (stepIdx >= workout.plan.length) { endWorkout(); return; }
-  stepStartWall = performance.now();
-  totalPaused = 0;
-  renderStep();
-  beep('interval');
-}
-
-function endWorkout() {
-  clearInterval(timer);
-  const { totalSec } = workout;
-  const seriesCount = parseInt(document.getElementById('seriesCount').value) || 1;
-  const totalIntervals = seriesCount * intervals.length;
-
-  document.getElementById('doneStats').innerHTML = `
-    <div class="stat-row">
-      <span class="stat-label">Łączny czas</span>
-      <span class="stat-val">${formatTime(totalSec)}</span>
-    </div>
-    <div class="stat-row">
-      <span class="stat-label">Serie</span>
-      <span class="stat-val">${seriesCount}</span>
-    </div>
-    <div class="stat-row">
-      <span class="stat-label">Interwały</span>
-      <span class="stat-val">${totalIntervals}</span>
-    </div>
-  `;
-
-  showScreen('done');
-  beep('end');
-}
-
-// ── SCREENS ──
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// ── EVENTS ──
-document.getElementById('startBtn').addEventListener('click', () => {
-  beep('start');
-  setTimeout(startWorkout, 100);
-});
-
-document.getElementById('stopBtn').addEventListener('click', () => {
+// ══════════════════════════════════════
+// EVENTS — initAudio() always called
+// inside click handler (iOS requirement)
+// ══════════════════════════════════════
+document.getElementById('startBtn').onclick = () => {
+  initAudio();
+  startWorkout();
+};
+document.getElementById('stopBtn').onclick = () => {
   if (confirm('Zakończyć trening?')) {
-    clearInterval(timer);
+    if (rafId) { cancelAnimationFrame(rafId); rafId=null; }
+    plan=[];
     showScreen('setup');
   }
-});
-
-document.getElementById('pauseBtn').addEventListener('click', pauseWorkout);
-document.getElementById('skipBtn').addEventListener('click', skipStep);
-document.getElementById('againBtn').addEventListener('click', () => showScreen('setup'));
-
-document.getElementById('muteBtn').addEventListener('click', () => {
+};
+document.getElementById('pauseBtn').onclick   = () => { initAudio(); resumeAudio(); togglePause(); };
+document.getElementById('prevBtn').onclick    = () => { initAudio(); resumeAudio(); goPrev(); };
+document.getElementById('restartBtn').onclick = () => { initAudio(); resumeAudio(); goRestart(); };
+document.getElementById('nextBtn').onclick    = () => { initAudio(); resumeAudio(); goNext(); };
+document.getElementById('againBtn').onclick   = () => showScreen('setup');
+document.getElementById('muteBtn').onclick    = () => {
   muted = !muted;
   document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔔';
-});
+};
 
-// ── iOS INSTALL PROMPT ──
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-const isStandalone = window.navigator.standalone;
-if (isIOS && !isStandalone) {
+// iOS install banner
+if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone)
   document.getElementById('installBanner').classList.add('show');
-}
 
 // Init
 renderIntervals();
-
-// Unlock audio on first touch
-document.addEventListener('touchstart', () => {
-  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-}, { once: true });
 </script>
 </body>
 </html>
